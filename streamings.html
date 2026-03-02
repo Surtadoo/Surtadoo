@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <link rel="stylesheet" href="style.css" />
+  <title>Formulario Streamings — BKS Influencer</title>
+</head>
+<body class="form-page streaming-page">
+  <header class="topbar" role="banner">
+    <div class="tab">
+      <div class="tab-left">
+        <img src="bks.png" alt="BKS avatar" class="avatar" />
+      </div>
+      <button id="hamburger" class="hamburger" aria-label="Abrir menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <nav id="menu" class="menu" aria-hidden="true">
+      <button class="menu-item btn" id="inicio">Início</button>
+      <button class="menu-item btn" id="formularios">Formulários</button>
+      <button class="menu-item btn" id="parcerias">Parcerias</button>
+      <button class="menu-item btn" id="contatos">Contatos</button>
+      <button class="menu-item btn" id="sobre">Sobre mim</button>
+    </nav>
+  </header>
+
+  <main id="app">
+    <div class="staff-card" role="region" aria-label="Formulário Streamings">
+      <img src="bks.png" alt="BKS avatar large" class="staff-avatar" />
+      <div class="staff-title">Formulário Streamings</div>
+
+      <form class="staff-questions" id="streamingForm" autocomplete="off">
+        <div class="question">
+          <label for="realname">NOME REAL:</label>
+          <input id="realname" name="realname" type="text" placeholder="Seu nome real" />
+        </div>
+
+        <div class="question">
+          <label for="stage">NOME ARTÍSTICO:</label>
+          <input id="stage" name="stage" type="text" placeholder="Seu nome artístico" />
+        </div>
+
+        <div class="question">
+          <label for="mention">MENÇÃO (@DISCORD):</label>
+          <input id="mention" name="mention" type="text" placeholder="@seunome" />
+        </div>
+
+        <div class="question">
+          <label>QUAIS PLATAFORMAS VCS TRABALHA FAZENDO LIVE/VIDEO:</label>
+          <div style="display:flex;flex-direction:column;gap:8px;padding-left:6px;">
+            <label><input type="checkbox" name="platforms" value="kwai"> KWAI</label>
+            <label><input type="checkbox" name="platforms" value="tiktok"> TIKTOK</label>
+            <label><input type="checkbox" name="platforms" value="facebook"> FECEBOOCK</label>
+            <label><input type="checkbox" name="platforms" value="youtube"> YOUTUBE</label>
+            <label><input type="checkbox" name="platforms" value="bigo"> BIGO LIVE</label>
+            <label><input type="checkbox" name="platforms" value="twitch"> TWITCH</label>
+          </div>
+        </div>
+
+        <div class="question">
+          <label for="profile">ENVIAR LINK DO SEU PERFIL PROFISSIONAL:</label>
+          <input id="profile" name="profile" type="text" placeholder="https://" />
+        </div>
+
+        <div class="staff-actions">
+          <button class="btn dominant" type="submit">Enviar Formulário</button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>

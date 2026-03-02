@@ -4,12 +4,14 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <link rel="stylesheet" href="style.css" />
-  <title>BKS Influencer</title>
+  <title>Formulários — BKS Influencer</title>
 </head>
-<body>
+<body class="form-page">
   <header class="topbar" role="banner">
     <div class="tab">
-      <div class="tab-left">BKS</div>
+      <div class="tab-left">
+        <img src="bks.png" alt="BKS avatar" class="avatar" />
+      </div>
       <button id="hamburger" class="hamburger" aria-label="Abrir menu" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
@@ -25,9 +27,12 @@
   </header>
 
   <main id="app">
-    <img src="bks.png" alt="BKS Influencer logo" class="main-avatar" />
-    <h1 id="brand" aria-label="BKS Influencer"></h1>
-    <p class="desc">Criando conteúdo, parcerias e conexões — BKS Influencer.</p>
+    <h1 id="brand" aria-label="Formularios Staff/ Streamings">Formularios Staff/ Streamings</h1>
+    <img src="bks.png" alt="BKS Influencer logo" class="main-avatar large-avatar" />
+    <div class="buttons-row" role="group" aria-label="Opções">
+      <button class="btn dominant" id="btn-staff">Staff</button>
+      <button class="btn dominant" id="btn-streamings">Streamings</button>
+    </div>
   </main>
 
   <script type="module" src="script.js"></script>

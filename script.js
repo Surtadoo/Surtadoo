@@ -4,6 +4,7 @@
   - Adds a randomized stagger so the animation feels lively
   - Adds a topbar hamburger that toggles a slide-down menu with items
   - Hooks click feedback for menu and main buttons
+  - Adds navigation: "Início" scrolls to top, "Formulários" opens formulario.html in same tab
 */
 
 const BRAND = "BKS Influencer";
@@ -43,7 +44,14 @@ function createAnimatedName(text){
   brandEl.appendChild(frag);
 }
 
-createAnimatedName(BRAND);
+// Only create the animated "BKS Influencer" brand on the main index page.
+// If we're on formulario.html (or the document title/header is custom), skip injecting the animated brand.
+if (brandEl) {
+  const isFormularioPage = location.pathname.endsWith('formulario.html') || document.title.toLowerCase().includes('formular');
+  if (!isFormularioPage) {
+    createAnimatedName(BRAND);
+  }
+}
 
 // menu toggle
 const hamburger = document.getElementById('hamburger');
@@ -75,14 +83,40 @@ function pulse(btn){
 }
 
 // Query menu items (menu and main duplicates)
-const ids = ['contatos','formularios','parcerias','sobre','contatos-main','formularios-main','parcerias-main'];
+const ids = ['inicio','contatos','formularios','parcerias','sobre','contatos-main','formularios-main','parcerias-main'];
 ids.forEach(id => {
   const el = document.getElementById(id);
   if (!el) return;
   el.addEventListener('pointerdown', ()=>pulse(el));
-  el.addEventListener('click', ()=> {
-    // simple demo behavior: close menu when a menu item clicked
+  el.addEventListener('click', (ev)=> {
+    // navigation behaviors:
+    // - close menu when a menu item clicked
     if (menu && menu.classList.contains('open')) setMenu(false);
+
+    // - "inicio" scrolls to top of this page
+    if (el.id === 'inicio') {
+      ev.preventDefault();
+      // If we're on the homepage (root or index.html), just scroll to top.
+      // Otherwise, navigate back to the site's homepage.
+      const pathname = location.pathname.replace(/\/$/, '');
+      const isHome = pathname === '' || pathname.endsWith('/index.html');
+      if (isHome) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        // Navigate to index.html (same tab)
+        window.location.href = 'index.html';
+      }
+      return;
+    }
+
+    // - "formularios" opens formulario.html in same tab
+    if (el.id === 'formularios') {
+      ev.preventDefault();
+      window.location.href = 'formulario.html';
+      return;
+    }
+
+    // other items can have specific behaviors later
   });
   el.addEventListener('focus', ()=>el.classList.add('focused'));
   el.addEventListener('blur', ()=>el.classList.remove('focused'));
@@ -98,3 +132,25 @@ document.addEventListener('pointerdown', (e)=>{
 
 // Prevent page scrolling to keep single-screen layout on touch devices
 document.addEventListener('touchmove', e => { if (e.target === document.body) e.preventDefault(); }, { passive:false });
+
+// Open staff and streamings pages from formulario
+const btnStaff = document.getElementById('btn-staff');
+const btnStream = document.getElementById('btn-streamings');
+
+if (btnStaff) {
+  btnStaff.addEventListener('pointerdown', ()=>pulse(btnStaff));
+  btnStaff.addEventListener('click', (ev) => {
+    ev.preventDefault();
+    // open staff form page in same tab
+    window.location.href = 'staff.html';
+  });
+}
+
+if (btnStream) {
+  btnStream.addEventListener('pointerdown', ()=>pulse(btnStream));
+  btnStream.addEventListener('click', (ev) => {
+    ev.preventDefault();
+    // open streamings form page in same tab
+    window.location.href = 'streamings.html';
+  });
+}
