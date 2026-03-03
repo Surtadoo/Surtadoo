@@ -1,9 +1,9 @@
 /*
-  script.js — optimized init
+  script.js — optimized init + validation + home click
   - Defer initialization until DOMContentLoaded to avoid blocking parsing
   - Move partner click handling here (removed inline script)
-  - Avoid blocking touchmove preventDefault and reduce synchronous DOM queries
-  - Added streamings form submission to Discord webhook
+  - Added streamings and staff form client-side required validation
+  - Make top-left tab-left clickable to return to index.html
 */
 
 (function(){
@@ -39,7 +39,6 @@
       span.className = 'letter';
       span.setAttribute('data-char', ch);
       span.textContent = ch;
-      // small deterministic stagger to avoid heavy layout thrash
       span.style.animationDelay = `${(i % 6) * 60}ms`;
       span.style.transform = `scale(${0.98 + ((i%4)/100)})`;
       frag.appendChild(span);
@@ -71,6 +70,26 @@
     }
   }
 
+  // Utility: mark invalid inputs and return first invalid
+  function validateRequired(form, selectors) {
+    let firstInvalid = null;
+    // clear previous marks
+    form.querySelectorAll('.input-invalid').forEach(el => el.classList.remove('input-invalid'));
+    selectors.forEach(sel => {
+      const el = form.querySelector(sel);
+      if (!el) return;
+      const val = (el.type === 'checkbox' || el.type === 'radio')
+        ? (form.querySelectorAll(sel + ':checked').length)
+        : (typeof el.value === 'string' ? el.value.trim() : String(el.value || '').trim());
+      const isEmpty = (val === null || val === undefined || val === '' || val === 0);
+      if (isEmpty) {
+        el.classList.add('input-invalid');
+        if (!firstInvalid) firstInvalid = el;
+      }
+    });
+    return firstInvalid;
+  }
+
   // run after DOM ready
   document.addEventListener('DOMContentLoaded', () => {
     const brandEl = document.getElementById('brand');
@@ -82,6 +101,16 @@
     const hamburger = document.getElementById('hamburger');
     const menu = document.getElementById('menu');
     if (hamburger) hamburger.addEventListener('click', ()=> setMenu(menu, hamburger, !(menu && menu.classList.contains('open')) ) );
+
+    // Make top-left "tab-left" clickable to go home (acts as the "setinha")
+    const tabLeft = document.querySelector('.tab-left');
+    if (tabLeft) {
+      tabLeft.style.cursor = 'pointer';
+      tabLeft.addEventListener('click', (ev) => {
+        ev.preventDefault();
+        location.assign('index.html');
+      });
+    }
 
     // menu + main buttons
     const ids = ['inicio','contatos','formularios','parcerias','sobre','contatos-main','formularios-main','parcerias-main'];
@@ -100,6 +129,8 @@
         }
         if (el.id === 'formularios') { ev.preventDefault(); return location.assign('formulario.html'); }
         if (el.id === 'parcerias') { ev.preventDefault(); return location.assign('parcerias.html'); }
+        if (el.id === 'contatos') { ev.preventDefault(); return location.assign('contatos.html'); }
+        if (el.id === 'sobre') { ev.preventDefault(); return location.assign('sobre.html'); }
       });
       el.addEventListener('focus', ()=>el.classList.add('focused'));
       el.addEventListener('blur', ()=>el.classList.remove('focused'));
@@ -137,13 +168,21 @@
       window.open(href, '_blank', 'noopener');
     });
 
-    // STREAMINGS FORM: collect and send to Discord webhook
+    // STREAMINGS FORM: client-side required validation + submission
     const streamingForm = document.getElementById('streamingForm');
     if (streamingForm) {
       streamingForm.addEventListener('submit', async (ev) => {
         ev.preventDefault();
         const btn = streamingForm.querySelector('button[type="submit"]');
         if (btn) { btn.disabled = true; pulse(btn); }
+
+        // Required fields for streamings: realname, stage, mention, at least one platform
+        const firstInvalid = validateRequired(streamingForm, ['#realname', '#stage', '#mention', 'input[name="platforms"]']);
+        if (firstInvalid) {
+          if (btn) { btn.disabled = false; }
+          firstInvalid.focus({ preventScroll: true });
+          return;
+        }
 
         // gather data
         const form = new FormData(streamingForm);
@@ -164,8 +203,6 @@
         if (profile) lines.push(`**Perfil:** ${profile}`);
         lines.push(`_Enviado em_: ${new Date().toLocaleString()}`);
 
-        // try to detect a Discord user ID inside a dedicated #discord input (id="discord") first,
-        // then fall back to the mention field. Accept raw IDs or common mention forms (<@123>, <@!123>).
         let mentionRaw = '';
         try {
           const discordEl = document.getElementById('discord');
@@ -177,16 +214,13 @@
         } catch (e) {
           mentionRaw = mention || '';
         }
-        // extract a 17-19 digit Discord ID if present
         const idMatch = (mentionRaw || '').match(/(\d{17,19})/);
 
-        // Format mention for display similar to staff form: "<@ID>/ ID"
         let mentionDisplay = '';
         const payload = { content: lines.join('\n') };
         if (idMatch) {
           const userId = idMatch[1];
           mentionDisplay = `<@${userId}>/ ${userId}`;
-          // replace the plain Menção line (if present) with the display format
           for (let i = 0; i < lines.length; i++) {
             if (lines[i].startsWith('**Menção:**')) {
               lines[i] = `**Menção:** ${mentionDisplay}`;
@@ -194,10 +228,8 @@
             }
           }
           payload.content = lines.join('\n');
-          // allow the webhook to actually ping the user
           payload.allowed_mentions = { users: [userId] };
         } else if (mention && mention.trim().length) {
-          // keep original mention text if no ID detected
           for (let i = 0; i < lines.length; i++) {
             if (lines[i].startsWith('**Menção:**')) {
               lines[i] = `**Menção:** ${mention}`;
@@ -209,7 +241,6 @@
 
         const ok = await postToWebhook(payload);
         if (ok) {
-          // lightweight success feedback
           try { streamingForm.reset(); } catch(e){}
           if (btn) btn.textContent = 'Enviado ✓';
           setTimeout(()=> { if (btn){ btn.textContent = 'Enviar Formulário'; btn.disabled = false; } }, 1800);
@@ -218,15 +249,33 @@
           setTimeout(()=> { if (btn){ btn.textContent = 'Enviar Formulário'; } }, 2400);
         }
       });
+
+      // remove error styling when user interacts
+      streamingForm.addEventListener('input', (e) => {
+        const t = e.target;
+        if (t && t.classList && t.classList.contains('input-invalid')) t.classList.remove('input-invalid');
+        // if checkbox change, clear any checkbox group invalid state by unmarking boxes
+        if (t && t.name === 'platforms') {
+          streamingForm.querySelectorAll('input[name="platforms"]').forEach(cb => cb.classList.remove('input-invalid'));
+        }
+      });
     }
 
-    // STAFF FORM: collect and send to Discord webhook (uses provided staff webhook)
+    // STAFF FORM: client-side required validation + submission
     const staffForm = document.getElementById('staffForm');
     if (staffForm) {
       staffForm.addEventListener('submit', async (ev) => {
         ev.preventDefault();
         const btn = staffForm.querySelector('button[type="submit"]');
         if (btn) { btn.disabled = true; pulse(btn); }
+
+        // Required fields for staff: realname, mention, age
+        const firstInvalid = validateRequired(staffForm, ['#realname', '#mention', '#age']);
+        if (firstInvalid) {
+          if (btn) { btn.disabled = false; }
+          firstInvalid.focus({ preventScroll: true });
+          return;
+        }
 
         // gather data
         const form = new FormData(staffForm);
@@ -239,8 +288,6 @@
         const responsible = form.get('responsible') || '';
         const strengths = form.get('strengths') || '';
 
-        // try to detect a Discord user ID inside a dedicated #discord input (id="discord") first,
-        // then fall back to the mention field. Accept raw IDs or common mention forms (<@123>, <@!123>).
         let mentionRaw = '';
         try {
           const discordEl = document.getElementById('discord');
@@ -252,12 +299,10 @@
         } catch (e) {
           mentionRaw = mention || '';
         }
-        // extract a 17-19 digit Discord ID if present
         const idMatch = (mentionRaw || '').match(/(\d{17,19})/);
         let mentionDisplay = '';
         if (idMatch) {
           const userId = idMatch[1];
-          // format as "<@ID>/ ID" for the Menção line and prepare payload to actually ping the user
           mentionDisplay = `<@${userId}>/ ${userId}`;
         } else if (mentionRaw && typeof mentionRaw === 'string' && mentionRaw.trim().length) {
           mentionDisplay = mentionRaw.trim();
@@ -278,10 +323,6 @@
 
         const payload = { content: lines.join('\n') };
 
-        // Do not prefix the message with a mention. The Menção is already formatted
-        // inside the lines (e.g. "<@ID>/ ID") and will appear in the "Menção:" line.
-        // This avoids showing a ping or mention before the "Formulário Staff — BKS Influencer" title.
-
         // staff-specific webhook (from user)
         const STAFF_WEBHOOK = 'https://discord.com/api/webhooks/1478173380900294786/whFHkfPBctNyRD6TBUkyPuI9ZhRGR3_lglommhrrra3UwN_85qgIkMU027QtEZ-BHypF';
 
@@ -295,10 +336,15 @@
           setTimeout(()=> { if (btn){ btn.textContent = 'Enviar Formulário'; } }, 2400);
         }
       });
+
+      // clear invalid styling on input
+      staffForm.addEventListener('input', (e) => {
+        const t = e.target;
+        if (t && t.classList && t.classList.contains('input-invalid')) t.classList.remove('input-invalid');
+      });
     }
 
     // minor performance tweak: avoid preventing touchmove globally (was blocking passive handling)
-    // (removed previous touchmove prevent to avoid interaction stalls)
   });
 
 })();

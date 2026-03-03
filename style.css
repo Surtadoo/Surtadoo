@@ -178,22 +178,22 @@ html,body{
   text-align:center;
 }
 
-/* main avatar above brand */
+/* main avatar above brand (increased size on homepage) */
 .main-avatar{
-  width:96px;
-  height:96px;
-  border-radius:14px;
+  width:160px;
+  height:160px;
+  border-radius:18px;
   object-fit:cover;
-  box-shadow: 0 10px 28px rgba(0,0,0,0.6), 0 4px 12px rgba(140,0,197,0.12);
+  box-shadow: 0 18px 44px rgba(0,0,0,0.62), 0 8px 18px rgba(140,0,197,0.12);
   border: 2px solid rgba(255,255,255,0.04);
   transform: translateY(0);
 }
 
 /* larger avatar variant used on the formulario page */
 .large-avatar{
-  width:140px;
-  height:140px;
-  border-radius:16px;
+  width:200px;
+  height:200px;
+  border-radius:18px;
 }
 
 /* Adjustments specifically for the formulario page: move content up and enlarge avatar */
@@ -201,9 +201,9 @@ html,body{
   padding-top: calc(var(--topbar-height) + 8px); /* reduce vertical offset so content sits higher */
 }
 .form-page .large-avatar{
-  width:180px;
-  height:180px;
-  border-radius:18px;
+  width:220px;
+  height:220px;
+  border-radius:20px;
 }
 
 /* Animated brand */
@@ -215,6 +215,32 @@ html,body{
   display:inline-block;
   padding:8px 12px;
   filter: drop-shadow(0 6px 24px rgba(140,0,197,0.12));
+  user-select:none;
+}
+
+/* Parcerias heading placed beneath the brand, matching brand sizing and weight */
+#brand-parcerias{
+  display:block;
+  font-size: clamp(28px, 9vw, 58px);
+  letter-spacing: 0.02em;
+  line-height:1;
+  font-weight:800;
+  margin-top:-18px; /* moved slightly further up */
+  color:var(--fg);
+  padding:0 12px;
+  user-select:none;
+}
+
+/* Subtitle used on formulario page under the main "Formularios" brand */
+#brand-subtitle{
+  display:block;
+  font-size: clamp(16px, 4.5vw, 22px);
+  letter-spacing: 0.01em;
+  line-height:1;
+  font-weight:700;
+  margin-top:-6px;
+  color:rgba(255,255,255,0.92);
+  padding:0 12px;
   user-select:none;
 }
 
@@ -285,30 +311,35 @@ html,body{
   align-items:center;
 }
 
-/* Row of two buttons used on formulario page */
-.buttons-row{
+/* Column of two buttons used on formulario page (stacked: staff then streamings) */
+.buttons-col{
   display:flex;
-  gap:12px;
-  width:min(420px, 86vw);
+  flex-direction:column;
+  gap:10px;
+  width:min(280px, 86vw);
   justify-content:center;
   align-items:center;
-  margin-top:12px;
+  margin-top:10px;
 }
+/* Slightly reduced buttons for Staff / Streamings */
 .buttons-row .btn{
   flex:1 1 0;
-  min-width:120px;
-  max-width:200px;
+  min-width:90px;
+  max-width:170px;
+  min-height:44px;
+  padding:8px 12px;
+  font-size:14px;
 }
 
 /* Make some buttons visually dominant on formulario page */
 .btn.dominant{
-  min-height:56px;
+  min-height:48px;
   font-weight:700;
-  font-size:18px;
+  font-size:16px;
   letter-spacing:0.01em;
-  border-radius:14px;
-  box-shadow: 0 14px 40px rgba(140,0,197,0.18), inset 0 -3px 8px rgba(255,255,255,0.03);
-  background: linear-gradient(180deg, #a01be8 0%, #7b00b8 100%);
+  border-radius:12px;
+  box-shadow: 0 10px 32px rgba(140,0,197,0.16), inset 0 -2px 6px rgba(255,255,255,0.03);
+  background: linear-gradient(180deg, #9a14db 0%, #6f00a6 100%);
   transition: transform .16s cubic-bezier(.2,.8,.2,1), box-shadow .16s ease, opacity .12s ease;
 }
 
@@ -411,16 +442,16 @@ html,body{
 /* Buttons */
 .btn{
   -webkit-tap-highlight-color: transparent;
-  min-height:48px;
-  min-width: 160px;
-  padding:12px 18px;
+  min-height:44px;
+  min-width: 140px;
+  padding:10px 14px;
   border-radius:10px;
   border:0;
   cursor:pointer;
-  font-size:16px;
+  font-size:15px;
   color:var(--fg);
   background:linear-gradient(180deg, var(--btn) 0%, rgba(124,0,183,0.95) 100%);
-  box-shadow: 0 8px 24px rgba(140,0,197,0.12), inset 0 -2px 6px rgba(255,255,255,0.02);
+  box-shadow: 0 7px 20px rgba(140,0,197,0.12), inset 0 -2px 6px rgba(255,255,255,0.02);
   transition: transform .16s cubic-bezier(.2,.8,.2,1), box-shadow .16s ease, background .12s ease;
   display:flex;
   align-items:center;
@@ -627,4 +658,13 @@ html,body{
   40%{ opacity:0.6; transform: translate(-50%,-50%) scale(1.06); }
   70%{ opacity:0.28; transform: translate(-50%,-50%) scale(1.02); }
   100%{ opacity:0.12; transform: translate(-50%,-50%) scale(0.96); }
+}
+
+/* Validation styles: highlight invalid inputs */
+.input-invalid,
+.question .input-invalid,
+textarea.input-invalid {
+  border-color: #ff4d4f !important;
+  box-shadow: 0 6px 18px rgba(255,77,79,0.12) !important;
+  background: rgba(255,77,79,0.04) !important;
 }
