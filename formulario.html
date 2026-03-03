@@ -4,6 +4,10 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <link rel="stylesheet" href="style.css" />
+  <!-- Preload main script and logo to reduce blocking -->
+  <link rel="preload" href="script.js" as="script">
+  <link rel="preload" as="image" href="bks.png">
+  <link rel="prefetch" href="streamings.html">
   <title>Formulários — BKS Influencer</title>
 </head>
 <body class="form-page">
@@ -28,13 +32,13 @@
 
   <main id="app">
     <h1 id="brand" aria-label="Formularios Staff/ Streamings">Formularios Staff/ Streamings</h1>
-    <img src="bks.png" alt="BKS Influencer logo" class="main-avatar large-avatar" />
+    <img src="bks.png" alt="BKS Influencer logo" class="main-avatar large-avatar" loading="lazy" decoding="async" width="180" height="180" />
     <div class="buttons-row" role="group" aria-label="Opções">
       <button class="btn dominant" id="btn-staff">Staff</button>
       <button class="btn dominant" id="btn-streamings">Streamings</button>
     </div>
   </main>
 
-  <script type="module" src="script.js"></script>
+  <script src="script.js" defer></script>
 </body>
 </html>

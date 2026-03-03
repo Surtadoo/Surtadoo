@@ -4,13 +4,17 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <link rel="stylesheet" href="style.css" />
+  <!-- Preload main script and logo to reduce blocking -->
+  <link rel="preload" href="script.js" as="script">
+  <link rel="preload" as="image" href="bks.png">
+  <link rel="prefetch" href="formulario.html">
   <title>Formulario Staff — BKS Influencer</title>
 </head>
 <body class="form-page staff-page">
   <header class="topbar" role="banner">
     <div class="tab">
       <div class="tab-left">
-        <img src="bks.png" alt="BKS avatar" class="avatar" />
+        <img src="bks.png" alt="BKS avatar" class="avatar" loading="lazy" decoding="async" width="44" height="44" />
       </div>
       <button id="hamburger" class="hamburger" aria-label="Abrir menu" aria-expanded="false">
         <span></span><span></span><span></span>
@@ -28,7 +32,7 @@
 
   <main id="app">
     <div class="staff-card" role="region" aria-label="Formulário Staff">
-      <img src="bks.png" alt="BKS avatar large" class="staff-avatar" />
+      <img src="bks.png" alt="BKS avatar large" class="staff-avatar" loading="lazy" decoding="async" width="220" height="220" />
       <div class="staff-title">Formulario Staff</div>
 
       <form class="staff-questions" id="staffForm" autocomplete="off">
@@ -79,6 +83,6 @@
     </div>
   </main>
 
-  <script type="module" src="script.js"></script>
+  <script src="script.js" defer></script>
 </body>
 </html>
