@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameHub - Jogos Incríveis</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <h1 class="logo-text">GAMEHUB</h1>
+                <div class="logo-glow"></div>
+            </div>
+            <div class="search-container">
+                <input type="text" class="search-input" id="searchInput" placeholder="Pesquisar jogos...">
+                <button class="search-btn" id="searchBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </button>
+            </div>
+            <nav class="nav">
+                <button class="nav-btn active" data-filter="all">Todos</button>
+                <button class="nav-btn" data-filter="action">Ação</button>
+                <button class="nav-btn" data-filter="puzzle">Puzzle</button>
+                <button class="nav-btn" data-filter="arcade">Arcade</button>
+                <button class="nav-btn" data-filter="console">Console</button>
+            </nav>
+            <button class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </header>
+
+        <div class="mobile-menu" id="mobileMenu">
+            <div class="mobile-menu-header">
+                <h3>Menu</h3>
+                <button class="menu-close" id="menuClose">&times;</button>
+            </div>
+            <div class="mobile-menu-items">
+                <a href="#" class="mobile-menu-item" onclick="window.gameHub.goToHome(); return false;">Início</a>
+                <a href="https://wa.me/5521980204832" class="mobile-menu-item" target="_blank">Suporte</a>
+                <a href="#" class="mobile-menu-item" onclick="window.gameHub.showParcerias(); return false;">Parcerias</a>
+                <a href="#" class="mobile-menu-item" onclick="window.gameHub.showDoacoes(); return false;">Doação</a>
+                <div class="mobile-menu-item dropdown">
+                    <a href="#" class="dropdown-toggle" onclick="event.preventDefault(); this.parentElement.classList.toggle('active')">
+                        Categorias <span class="dropdown-arrow">▼</span>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item" onclick="window.gameHub.filterByCategory('all'); return false;">Todos</a>
+                        <a href="#" class="dropdown-item" onclick="window.gameHub.filterByCategory('action'); return false;">Ação</a>
+                        <a href="#" class="dropdown-item" onclick="window.gameHub.filterByCategory('adventure'); return false;">Aventura</a>
+                        <a href="#" class="dropdown-item" onclick="window.gameHub.filterByCategory('horror'); return false;">Terror</a>
+                        <a href="#" class="dropdown-item" onclick="window.gameHub.filterByCategory('racing'); return false;">Corrida</a>
+                        <a href="#" class="dropdown-item" onclick="window.gameHub.filterByCategory('rpg'); return false;">RPG</a>
+                        <a href="#" class="dropdown-item" onclick="window.gameHub.filterByCategory('football'); return false;">Futebol</a>
+                        <a href="#" class="dropdown-item" onclick="window.gameHub.filterByCategory('strategy'); return false;">Estratégia</a>
+                        <a href="#" class="dropdown-item" onclick="window.gameHub.filterByCategory('arcade'); return false;">Arcade</a>
+                        <a href="#" class="dropdown-item" onclick="window.gameHub.filterByCategory('fighting'); return false;">Luta</a>
+                        <a href="#" class="dropdown-item" onclick="window.gameHub.filterByCategory('survival'); return false;">Sobrevivência</a>
+                        <a href="#" class="dropdown-item" onclick="window.gameHub.filterByCategory('simulation'); return false;">Simulação</a>
+                        <a href="#" class="dropdown-item" onclick="window.gameHub.filterByCategory('aplicativos'); return false;">Aplicativos</a>
+                    </div>
+                </div>
+                <div class="mobile-menu-item dropdown">
+                    <a href="#" class="dropdown-toggle" onclick="event.preventDefault(); this.parentElement.classList.toggle('active')">
+                        Plataformas Console <span class="dropdown-arrow">▼</span>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="#" class="dropdown-item" onclick="window.gameHub.filterByPlatform('xbox360'); return false;">Xbox 360</a>
+                        <a href="#" class="dropdown-item" onclick="window.gameHub.filterByPlatform('xbox-classico'); return false;">Xbox Clássico</a>
+                        <a href="#" class="dropdown-item" onclick="window.gameHub.filterByPlatform('ps2'); return false;">PS2</a>
+                        <a href="#" class="dropdown-item" onclick="window.gameHub.filterByPlatform('pc'); return false;">PC</a>
+                        <a href="#" class="dropdown-item" onclick="window.gameHub.filterByPlatform('mobile'); return false;">Mobile</a>
+                        <a href="#" class="dropdown-item" onclick="window.gameHub.filterByPlatform('streamer'); return false;">Streamer</a>
+                        <a href="#" class="dropdown-item" onclick="window.gameHub.filterByPlatform('traducao'); return false;">Tradução</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <main class="main">
+            <!-- How to download section with video -->
+            <section class="how-to-download" aria-label="Como baixar jogos" style="margin-bottom:40px; display:flex; gap:20px; align-items:center; flex-wrap:wrap;">
+                <div style="flex:1; min-width:280px;">
+                    <h2 class="hero-title" style="margin-bottom:8px;">Como baixar os jogos</h2>
+                    <p class="hero-subtitle" style="margin-bottom:12px; color: #4CAF50; font-weight:600;">
+                        Siga estes passos simples: <br><br>
+                        1) Clique em um jogo para abrir os detalhes; <br>
+                        2) Use o botão "Download" para abrir o link do arquivo em nova guia; <br>
+                        3) Extraia ou instale conforme as instruções do arquivo. Se precisar de ajuda, assista o vídeo ou use o link de Suporte no menu. <br><br>
+                        Deixe o like no vídeo
+                    </p>
+                    <ul style="color:#4CAF50; line-height:1.6; padding-left:18px; margin:0 0 8px 0;">
+                        <li>Verifique a plataforma informada no cartão do jogo.</li>
+                        <li>Alguns arquivos podem exigir senha; verifique a descrição.</li>
+                        <li>Ao clicar em "Download", o arquivo abre em nova aba.</li>
+                    </ul>
+                </div>
+                <div style="flex:0 0 320px; min-width:220px; max-width:360px; margin-left:auto; margin-right:auto;">
+                        <!-- YouTube preview + click-to-load embed -->
+                    <div class="yt-preview" id="ytPreview" style="position:relative;width:100%;border-radius:12px;overflow:hidden;background:var(--light-gray);cursor:pointer;max-width:100%;">
+                        <img id="ytThumb" src="https://img.youtube.com/vi/qgQOyUvbn8o/maxresdefault.jpg" alt="Como baixar - preview" style="width:100%;height:auto;display:block;background:#111;">
+                        <div style="position:absolute;left:0;right:0;top:0;bottom:0;display:flex;align-items:center;justify-content:center;pointer-events:none;">
+                            <div style="width:72px;height:72px;border-radius:50%;background:rgba(10,10,10,0.6);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,0,0,0.6);">
+                                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" style="margin-left:6px;">
+                                    <path d="M5 3v18l15-9L5 3z" fill="#ff6b35"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div style="position:absolute;left:10px;bottom:10px;color:var(--primary-white);background:rgba(0,0,0,0.45);padding:8px 12px;border-radius:8px;font-weight:600;">
+                            Como baixar os jogos
+                        </div>
+                    </div>
+                    <noscript>
+                        <a href="https://youtu.be/qgQOyUvbn8o" target="_blank" rel="noopener noreferrer" style="color:var(--primary-orange);">Abrir vídeo no YouTube</a>
+                    </noscript>
+
+                    <script>
+                        (function(){
+                            const preview = document.getElementById('ytPreview');
+                            if (!preview) return;
+                            // If maxresdefault not available, fallback to hqdefault after image error
+                            const thumb = document.getElementById('ytThumb');
+                            thumb.addEventListener('error', () => {
+                                thumb.src = 'https://img.youtube.com/vi/qgQOyUvbn8o/hqdefault.jpg';
+                            });
+
+                            preview.addEventListener('click', function() {
+                                // create iframe and replace preview
+                                const iframe = document.createElement('iframe');
+                                iframe.width = '100%';
+                                iframe.height = '100%';
+                                iframe.style.border = '0';
+                                iframe.style.minHeight = '270px';
+                                iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+                                iframe.allowFullscreen = true;
+                                // Using rel=0 & modestbranding to reduce distractions
+                                iframe.src = 'https://www.youtube.com/embed/qgQOyUvbn8o?autoplay=1&rel=0&modestbranding=1';
+                                // keep aspect by wrapping in container
+                                const wrapper = document.createElement('div');
+                                wrapper.style.width = '100%';
+                                wrapper.style.borderRadius = '12px';
+                                wrapper.style.overflow = 'hidden';
+                                wrapper.appendChild(iframe);
+                                preview.replaceWith(wrapper);
+                                // prevent page jump
+                                history.replaceState(null, '', location.href);
+                            });
+                        })();
+                    </script>
+                </div>
+            </section>
+
+            <div class="hero">
+                <h2 class="hero-title">Descubra Jogos Incríveis</h2>
+                <p class="hero-subtitle">Baixe os melhores jogos, aplicativos, e traduções gratuitamente</p>
+            </div>
+
+            <div class="games-grid" id="gamesGrid">
+                <!-- Games will be loaded here -->
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Carregando jogos...</p>
+            </div>
+
+            <div class="no-games hidden" id="noGames">
+                <p>Nenhum jogo encontrado</p>
+            </div>
+        </main>
+
+        <!-- Game Modal -->
+        <div class="modal-overlay" id="gameModal">
+            <div class="modal-content">
+                <button class="modal-close" id="closeModal">&times;</button>
+                <div class="modal-body">
+                    <img id="modalImage" class="modal-image" alt="">
+                    <div class="modal-info">
+                        <h2 id="modalTitle" class="modal-title"></h2>
+                        <div class="modal-tags">
+                            <span id="modalCategory" class="modal-category"></span>
+                            <span id="modalPlatform" class="modal-platform"></span>
+                        </div>
+                        <p id="modalDescription" class="modal-description"></p>
+                        <a id="modalDownloadBtn" class="modal-download-btn" href="#" target="_blank">Download</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <div class="container">
+                <p class="footer-text">© Copyright © 2024-2025 GAMESHUB. Todos os direitos reservados.</p>
+                <p class="footer-credits">Criador & Programador do site: <span class="footer-highlight">𝕾𝖚𝖗𝖙𝖆𝖉𝖔</span></p>
+            </div>
+        </footer>
+
+        <script type="module" src="script.js"></script>
+</body>
+</html>
